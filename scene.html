@@ -76,10 +76,10 @@
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
             // Replace the below Arc Rotate Camera if you have an XR headset
-            // const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0), scene);
-            // camera.attachControl(canvas, true);
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0), scene);
+            camera.attachControl(canvas, true);
 
-            const xr = scene.createDefaultXRExperienceAsync();
+            // const xr = scene.createDefaultXRExperienceAsync();
 
             // STEP 8b: Return the scene
             return scene;
