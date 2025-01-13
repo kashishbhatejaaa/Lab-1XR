@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 2 - Import Model | COMP2144</title>
+    <style>
+        /* STEP 1: Have a look at some of the interesting CSS used to make sure the entire browser window object is used for the purpose of the Babylon.js Web app */
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }  
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+    <!-- STEP 2: Examine the JavaScript dependencies served up from a CDN - which is fine for development -->  
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+</head>
+<body>
+    <!-- STEP 3: Create a canvas element with an id, and set the touch-action attribute to "none" -->
+    <canvas id="renderCanvas" touch-action="none"></canvas>
+    <!-- touch-action="none" for best results from PEP -->
+ 
+    <script>
+        // STEP 4: Get the canvas element as a const
+        const canvas = document.getElementById("renderCanvas");
+        // STEP 5: Create the BABYLON 3D engine, and attach it to the canvas
+        const engine = new BABYLON.Engine(canvas, true);
+        // STEP 6: Build the createScene function
+        const createScene = function() {
+            // STEP 8a: Create a new BABYLON scene, passing in the engine as an argument
+            const scene = new BABYLON.Scene(engine);
+
+            // Original box mesh object
+            const box = BABYLON.MeshBuilder.CreateBox("box", {}, scene);
+            box.position.x = -3; 
+            box.material = new BABYLON.StandardMaterial("boxMaterial", scene);
+            box.material.diffuseColor = new BABYLON.Color3(1, 0, 0); // Red color
+
+            // Added mesh objects:
+            
+            // Sphere
+            const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2 }, scene);
+            sphere.position.x = 3; 
+            sphere.material = new BABYLON.StandardMaterial("sphereMaterial", scene);
+            sphere.material.diffuseColor = new BABYLON.Color3(0, 1, 0); // Green color
+
+            // Cylinder
+            const cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 3, diameter: 1.5 }, scene);
+            cylinder.position.z = -3; 
+            cylinder.material = new BABYLON.StandardMaterial("cylinderMaterial", scene);
+            cylinder.material.diffuseColor = new BABYLON.Color3(0, 0, 1); // Blue color
+
+            // Torus
+            const torus = BABYLON.MeshBuilder.CreateTorus("torus", { diameter: 3, thickness: 0.5 }, scene);
+            torus.position.z = 3; 
+            torus.material = new BABYLON.StandardMaterial("torusMaterial", scene);
+            torus.material.diffuseColor = new BABYLON.Color3(1, 1, 0); // Yellow color
+
+            // Add animation to torus
+            scene.onBeforeRenderObservable.add(() => {
+                torus.rotation.x += 0.01;
+                torus.rotation.y += 0.01;
+            });
+
+            // Original light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+            // Replace the below Arc Rotate Camera if you have an XR headset
+            // const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0), scene);
+            // camera.attachControl(canvas, true);
+
+            const xr = scene.createDefaultXRExperienceAsync();
+
+            // STEP 8b: Return the scene
+            return scene;
+        }
+        // STEP 7: Call the createScene function
+        const scene = createScene();
+        // STEP 8: Use the runRenderLoop() method to render the scene repeatedly
+        engine.runRenderLoop(function(){
+            scene.render();
+        })
+        // STEP 9: Add an event listener that adapts to the user resizing the screen
+        window.addEventListener("resize", function() {
+            engine.resize();
+        })
+        // STEP 10: Move the page up to a server (maybe GitHub Pages) and try it out!
+    </script>
+</body>
+</html>
